@@ -5,6 +5,8 @@ import sqlite3
 #VARIABLES GENERALES
 contador = 0
 data = []
+ventana = 1
+
 
 conn = sqlite3.connect("mibasededatos.db")
 c = conn.cursor()
@@ -121,9 +123,13 @@ def borrar():
         consolaL.config(text="NO HAS SELECCIONADO UNA ENTRADA")
         consolaL.configure(bg="red")
 
+def borrarKey(e):
+    borrar()
+
 def consolaCargando():
+    truelast = arbol.get_children()[-1]
     arbolHeight = len(arbol.get_children())
-    consolaL.config(text="#" + str(arbolHeight) + " Cargado")
+    consolaL.config(text="#" + str(truelast) + " Cargado")
     consolaL.configure(bg="green")
     
 def editar():
@@ -200,6 +206,14 @@ def editar():
         consolaL.config(text="NO HAS SELECCIONADO UNA ENTRADA")
         consolaL.configure(bg="red")
 
+def buscar():
+    arbolHeight = len(arbol.get_children())
+    if arbolHeight > 0:
+        elegirfila= arbol.get_children()[0]
+        arbol.focus(elegirfila)
+        arbol.selection_set(elegirfila)
+
+    
 
 #CONSOLA(PARTE AZUL)
 idL = Label(upw, text = "#" + str(contador + 1))
@@ -302,11 +316,15 @@ borrarB = ttk.Button(bottomw, text="Borrar", command=borrar)
 borrarB.pack(side=RIGHT, fill="x", padx= 25, pady = 1)
 editarB = ttk.Button(bottomw, text="Editar", command=editar)
 editarB.pack(side=RIGHT, fill="x", padx= 25, pady = 1)
+buscarB = ttk.Button(bottomw, text="Buscar", command=buscar)
+buscarB.pack(side=RIGHT, fill="x", padx= 25, pady = 1)
 
 
-
-root.bind('<Escape>', lambda e: close_root(e))
-root.bind('<Return>', cargarEnter)
+if ventana == 1:
+    root.bind('<Escape>', lambda e: close_root(e))
+    root.bind('<Return>', cargarEnter)
+    root.bind('<Delete>', lambda e: borrarKey(e))
+    
 
 root.mainloop()
 
